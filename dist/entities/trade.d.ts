@@ -1,13 +1,13 @@
 import { TradeType } from '../constants';
-import { Currency } from './currency';
-import { CurrencyAmount } from './fractions/currencyAmount';
 import { Percent } from './fractions/percent';
 import { Price } from './fractions/price';
+import { TokenAmount } from './fractions/tokenAmount';
 import { Pair } from './pair';
 import { Route } from './route';
+import { Token } from './token';
 interface InputOutput {
-    readonly inputAmount: CurrencyAmount;
-    readonly outputAmount: CurrencyAmount;
+    readonly inputAmount: TokenAmount;
+    readonly outputAmount: TokenAmount;
 }
 export declare function inputOutputComparator(a: InputOutput, b: InputOutput): number;
 export declare function tradeComparator(a: Trade, b: Trade): number;
@@ -31,11 +31,11 @@ export declare class Trade {
     /**
      * The input amount for the trade assuming no slippage.
      */
-    readonly inputAmount: CurrencyAmount;
+    readonly inputAmount: TokenAmount;
     /**
      * The output amount for the trade assuming no slippage.
      */
-    readonly outputAmount: CurrencyAmount;
+    readonly outputAmount: TokenAmount;
     /**
      * The price expressed in terms of output amount/input amount.
      */
@@ -53,39 +53,39 @@ export declare class Trade {
      * @param route route of the exact in trade
      * @param amountIn the amount being passed in
      */
-    static exactIn(route: Route, amountIn: CurrencyAmount): Trade;
+    static exactIn(route: Route, amountIn: TokenAmount): Trade;
     /**
      * Constructs an exact out trade with the given amount out and route
      * @param route route of the exact out trade
      * @param amountOut the amount returned by the trade
      */
-    static exactOut(route: Route, amountOut: CurrencyAmount): Trade;
-    constructor(route: Route, amount: CurrencyAmount, tradeType: TradeType);
+    static exactOut(route: Route, amountOut: TokenAmount): Trade;
+    constructor(route: Route, amount: TokenAmount, tradeType: TradeType);
     /**
      * Get the minimum amount that must be received from this trade for the given slippage tolerance
      * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
      */
-    minimumAmountOut(slippageTolerance: Percent): CurrencyAmount;
+    minimumAmountOut(slippageTolerance: Percent): TokenAmount;
     /**
      * Get the maximum amount in that can be spent via this trade for the given slippage tolerance
      * @param slippageTolerance tolerance of unfavorable slippage from the execution price of this trade
      */
-    maximumAmountIn(slippageTolerance: Percent): CurrencyAmount;
+    maximumAmountIn(slippageTolerance: Percent): TokenAmount;
     /**
      * Given a list of pairs, and a fixed amount in, returns the top `maxNumResults` trades that go from an input token
      * amount to an output token, making at most `maxHops` hops.
      * Note this does not consider aggregation, as routes are linear. It's possible a better route exists by splitting
      * the amount in among multiple routes.
      * @param pairs the pairs to consider in finding the best trade
-     * @param currencyAmountIn exact amount of input currency to spend
+     * @param TokenAmountIn exact amount of input currency to spend
      * @param currencyOut the desired currency out
      * @param maxNumResults maximum number of results to return
      * @param maxHops maximum number of hops a returned trade can make, e.g. 1 hop goes through a single pair
      * @param currentPairs used in recursion; the current list of pairs
-     * @param originalAmountIn used in recursion; the original value of the currencyAmountIn parameter
+     * @param originalAmountIn used in recursion; the original value of the TokenAmountIn parameter
      * @param bestTrades used in recursion; the current list of best trades
      */
-    static bestTradeExactIn(pairs: Pair[], currencyAmountIn: CurrencyAmount, currencyOut: Currency, { maxNumResults, maxHops }?: BestTradeOptions, currentPairs?: Pair[], originalAmountIn?: CurrencyAmount, bestTrades?: Trade[]): Trade[];
+    static bestTradeExactIn(pairs: Pair[], TokenAmountIn: TokenAmount, currencyOut: Token, { maxNumResults, maxHops }?: BestTradeOptions, currentPairs?: Pair[], originalAmountIn?: TokenAmount, bestTrades?: Trade[]): Trade[];
     /**
      * similar to the above method but instead targets a fixed output amount
      * given a list of pairs, and a fixed amount out, returns the top `maxNumResults` trades that go from an input token
@@ -94,13 +94,13 @@ export declare class Trade {
      * the amount in among multiple routes.
      * @param pairs the pairs to consider in finding the best trade
      * @param currencyIn the currency to spend
-     * @param currencyAmountOut the exact amount of currency out
+     * @param TokenAmountOut the exact amount of currency out
      * @param maxNumResults maximum number of results to return
      * @param maxHops maximum number of hops a returned trade can make, e.g. 1 hop goes through a single pair
      * @param currentPairs used in recursion; the current list of pairs
-     * @param originalAmountOut used in recursion; the original value of the currencyAmountOut parameter
+     * @param originalAmountOut used in recursion; the original value of the TokenAmountOut parameter
      * @param bestTrades used in recursion; the current list of best trades
      */
-    static bestTradeExactOut(pairs: Pair[], currencyIn: Currency, currencyAmountOut: CurrencyAmount, { maxNumResults, maxHops }?: BestTradeOptions, currentPairs?: Pair[], originalAmountOut?: CurrencyAmount, bestTrades?: Trade[]): Trade[];
+    static bestTradeExactOut(pairs: Pair[], currencyIn: Token, TokenAmountOut: TokenAmount, { maxNumResults, maxHops }?: BestTradeOptions, currentPairs?: Pair[], originalAmountOut?: TokenAmount, bestTrades?: Trade[]): Trade[];
 }
 export {};

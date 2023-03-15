@@ -1,11 +1,14 @@
 import { ChainId } from '../constants';
-import { Currency } from './currency';
 /**
- * Represents an ERC20 token with a unique address and some metadata.
+ * Represents an ERC20 token and Ether with a unique address and some metadata.
  */
-export declare class Token extends Currency {
+export declare class Token {
     readonly chainId: ChainId;
     readonly address: string;
+    readonly isEther: boolean;
+    readonly decimals: number;
+    readonly symbol: string | undefined;
+    readonly name: string | undefined;
     constructor(chainId: ChainId, address: string, decimals: number, symbol?: string, name?: string);
     /**
      * Returns true if the two tokens are equivalent, i.e. have the same chainId and address.
@@ -23,12 +26,5 @@ export declare class Token extends Currency {
 /**
  * Compares two currencies for equality
  */
-export declare function currencyEquals(currencyA: Currency, currencyB: Currency): boolean;
-export declare const WETH: {
-    1: Token;
-    3: Token;
-    4: Token;
-    5: Token;
-    42: Token;
-    50: Token;
-};
+export declare function currencyEquals(currencyA: Token, currencyB: Token): boolean;
+export declare const ETHER: Token;
